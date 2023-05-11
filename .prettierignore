@@ -1,0 +1,4 @@
+# Ignore artifacts:
+old-server
+node_modules
+.next
