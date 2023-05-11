@@ -1,0 +1,19 @@
+{
+  "name": "kindle-converter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prettier": "npx prettier --write .",
+    "clean": "del-cli --force ./output"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "prettier": "^2.8.8",
+    "xmlhttprequest": "^1.8.0"
+  },
+  "devDependencies": {
+    "del-cli": "^5.0.0"
+  }
+}
