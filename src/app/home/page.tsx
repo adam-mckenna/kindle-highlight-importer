@@ -1,25 +1,25 @@
 "use client";
+import { FormEvent, useState } from "react";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { useHighlightsContext } from "../../context";
+import { useHighlightsContext } from "../context";
 
-export default function Home() {
+const Home = () => {
   const router = useRouter();
 
   const [files, setFiles] = useState<FileList | null>(null);
 
-  const { highlights, setHighlights } = useHighlightsContext();
+  const { setHighlights } = useHighlightsContext();
 
-  const handleOnSubmit = async (e: any) => {
+  const handleOnSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     const reader = new FileReader();
-    reader.onloadend = async (e) => {
-      if (!e.target) return;
+    reader.onloadend = async ({ target }) => {
+      if (!target) return;
 
-      await setHighlights(e.target.result as string);
+      await setHighlights(target.result as string);
 
       router.push("results");
     };
@@ -37,12 +37,14 @@ export default function Home() {
       <form onSubmit={handleOnSubmit}>
         <input
           type="file"
-          onChange={(e) => {
-            setFiles(e.target.files);
+          onChange={({ target }) => {
+            setFiles(target.files);
           }}
         />
         <button type="submit">Upload</button>
       </form>
     </main>
   );
-}
+};
+
+export default Home;

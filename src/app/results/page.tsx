@@ -1,13 +1,10 @@
 "use client";
+import { useHighlightsContext } from "../context";
 
-import { GetServerSidePropsContext } from "next";
-
-import { useHighlightsContext } from "../../context";
-
-export default function Results() {
-  const { highlights, setHighlights } = useHighlightsContext();
-
-  console.log(highlights);
+const Results = () => {
+  const { highlights } = useHighlightsContext();
 
   return <main>{highlights}</main>;
-}
+};
+
+export default Results;
