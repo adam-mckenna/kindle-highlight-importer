@@ -3,14 +3,14 @@ import { FormEvent, useState } from "react";
 
 import { useRouter } from "next/navigation";
 
-import { useHighlightsContext } from "../context";
+import { useClippingsContext } from "../context";
 
 const Home = () => {
   const router = useRouter();
 
   const [files, setFiles] = useState<FileList | null>(null);
 
-  const { setHighlights } = useHighlightsContext();
+  const { setRawClippings } = useClippingsContext();
 
   const handleOnSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -18,9 +18,7 @@ const Home = () => {
     const reader = new FileReader();
     reader.onloadend = async ({ target }) => {
       if (!target) return;
-
-      await setHighlights(target.result as string);
-
+      await setRawClippings(target.result as string);
       router.push("results");
     };
     if (files) {
@@ -32,7 +30,7 @@ const Home = () => {
     <main>
       <h1>Import your highlights</h1>
       <p>
-        Import your <code>highlights.txt</code>
+        Import <code>My Clippings.txt</code>
       </p>
       <form onSubmit={handleOnSubmit}>
         <input

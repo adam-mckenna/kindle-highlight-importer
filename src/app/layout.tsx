@@ -1,4 +1,4 @@
-import { HighlightsContextProvider } from "@/app/context";
+import { ClippingsContextProvider } from "@/app/context";
 import "./globals.css";
 import { Inter } from "next/font/google";
 
@@ -12,7 +12,7 @@ export const metadata = {
 const RootLayout = ({ children }: { children: React.ReactNode }) => (
   <html lang="en">
     <body className={inter.className}>
-      <HighlightsContextProvider>{children}</HighlightsContextProvider>
+      <ClippingsContextProvider>{children}</ClippingsContextProvider>
     </body>
   </html>
 );

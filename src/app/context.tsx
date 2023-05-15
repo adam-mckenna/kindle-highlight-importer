@@ -1,29 +1,28 @@
 "use client";
-
 import { createContext, useContext, useState } from "react";
 
-type HighlightContextType = {
-  highlights: string;
-  setHighlights: (highlights: string) => void;
+type ClippingsContextType = {
+  rawClippings: string;
+  setRawClippings: (clippings: string) => void;
 };
 
-export const HighlightsContext = createContext<HighlightContextType>({
-  highlights: "",
-  setHighlights: () => null,
+export const ClippingsContext = createContext<ClippingsContextType>({
+  rawClippings: "",
+  setRawClippings: () => null,
 });
 
-export const HighlightsContextProvider = ({
+export const ClippingsContextProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
-  const [highlights, setHighlights] = useState<string>("");
+  const [rawClippings, setRawClippings] = useState<string>("");
 
   return (
-    <HighlightsContext.Provider value={{ highlights, setHighlights }}>
+    <ClippingsContext.Provider value={{ rawClippings, setRawClippings }}>
       {children}
-    </HighlightsContext.Provider>
+    </ClippingsContext.Provider>
   );
 };
 
-export const useHighlightsContext = () => useContext(HighlightsContext);
+export const useClippingsContext = () => useContext(ClippingsContext);
