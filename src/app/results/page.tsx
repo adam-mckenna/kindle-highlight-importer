@@ -14,12 +14,19 @@ type Clipping = {
   location: string;
 };
 
+type Book = {
+  book: string;
+  highlights: Array<Clipping>;
+  notes: Array<Clipping>;
+  bookmarks: Array<Clipping>;
+};
+
 const Results = () => {
   const { rawClippings } = useClippingsContext();
 
-  const [clippings, setClippings] = useState<Array<Clipping> | null>();
+  const [clippings, setClippings] = useState<Array<Clipping>>();
 
-  const [books, setBooks] = useState<any>();
+  const [books, setBooks] = useState<Array<Book>>();
 
   const transformRawClippings = async () => {
     let clippings = rawClippings
@@ -70,31 +77,25 @@ const Results = () => {
     }
   }, [clippings]);
 
-  useEffect(() => {
-    console.log(books);
-  }, [books]);
-
   const organiseClippingsIntoBooks = () => {
     if (!clippings) return;
-    let books: any = [
+    let bookStrings: Array<string> = [
       ...new Set(
         clippings
-          .map((clipping: { book: any }) => clipping.book)
-          .filter((element: undefined) => element !== undefined)
+          .map((clipping: { book: string }) => clipping.book)
+          .filter((element) => element !== undefined)
       ),
     ];
-    books = books.map((book: any) => {
+    const books = bookStrings.map((book: string) => {
       const bookClippings = clippings.filter(
-        (clipping: any) => clipping.book === book
+        (clipping) => clipping.book === book
       );
       const highlights = bookClippings.filter(
-        ({ category }: any) => category === "Highlight"
+        ({ category }) => category === "Highlight"
       );
-      const notes = bookClippings.filter(
-        ({ category }: any) => category === "Note"
-      );
+      const notes = bookClippings.filter(({ category }) => category === "Note");
       const bookmarks = bookClippings.filter(
-        ({ category }: any) => category === "Bookmark"
+        ({ category }) => category === "Bookmark"
       );
       return {
         book,
@@ -110,20 +111,16 @@ const Results = () => {
     <main>
       {books && books.length ? (
         books
-          .filter((book: any) => {
-            if (book.highlights.length) {
-              return books;
-            }
-          })
-          .map(({ book, highlights }: any) => (
+          .filter((book) => (book.highlights.length ? books : false))
+          .map(({ book, highlights }) => (
             <div key={book}>
               <h2>
                 <strong>{book}</strong>
-              </h2>{" "}
+              </h2>
               <br />
-              {highlights.map((highlight: { content: string }) => (
-                <p key={highlight.content}>
-                  {highlight.content} <br /> <br />
+              {highlights.map(({ content }: Clipping) => (
+                <p key={content}>
+                  {content} <br /> <br />
                 </p>
               ))}
             </div>
