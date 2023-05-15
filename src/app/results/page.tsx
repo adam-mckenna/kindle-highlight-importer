@@ -28,43 +28,61 @@ const Results = () => {
 
   const [books, setBooks] = useState<Array<Book>>();
 
-  const transformRawClippings = async () => {
-    let clippings = rawClippings
-      .split("==========")
-      .map((clipping) => clipping.trim());
+  const getLocation = (
+    category: string,
+    clippingSplitByLine: Array<string>
+  ) => {
+    let location = "";
+    if (category === "Note" || category === "Bookmark") {
+      const noteSplit = clippingSplitByLine[1].split(" ");
+      location = `${noteSplit[4]} ${noteSplit[5]}`;
+    }
+    return location;
+  };
 
-    const sortedClippings = clippings.map((clipping) => {
-      const textSplit = clipping.split(/\r?\n/).filter((n) => n);
-
-      if (!textSplit.length) return false;
-
-      const book = textSplit[0];
-      const category = textSplit[1].slice(2).split(" ")[1];
-      let location = "";
-      if (category === "Note" || category === "Bookmark") {
-        const noteSplit = textSplit[1].split(" ");
-        location = `${noteSplit[4]} ${noteSplit[5]}`;
-      }
-
-      let date = textSplit[1]
-        .split("|")[1]
+  const getDate = (clippingSplitByLine: Array<string>) => {
+    let date = clippingSplitByLine[1]
+      .split("|")[1]
+      .trim()
+      .split(" ")
+      .slice(2)
+      .join(" ");
+    if (!date) {
+      date = clippingSplitByLine[1]
+        .split("|")[2]
         .trim()
         .split(" ")
         .slice(2)
         .join(" ");
-      if (!date) {
-        date = textSplit[1].split("|")[2].trim().split(" ").slice(2).join(" ");
-      }
-      const content = textSplit[2];
+    }
+    return date;
+  };
+
+  const transformRawClippings = async () => {
+    const clippingsSplit: Array<string> = rawClippings
+      .split("==========")
+      .map((clipping) => clipping.trim());
+
+    const clippings = clippingsSplit.map((clipping) => {
+      const clippingSplitByLine = clipping.split(/\r?\n/).filter((n) => n);
+
+      if (!clippingSplitByLine.length) return false;
+
+      const book = clippingSplitByLine[0];
+      const category = clippingSplitByLine[1].slice(2).split(" ")[1];
+      const location = getLocation(category, clippingSplitByLine);
+      const date = getDate(clippingSplitByLine);
+      const content = clippingSplitByLine[2];
+
       return {
         book,
-        category: category as Category,
+        category,
         date,
         content,
         location,
       };
     });
-    setClippings(sortedClippings as Array<Clipping>);
+    setClippings(clippings as Array<Clipping>);
   };
 
   useEffect(() => {
